@@ -1,11 +1,15 @@
 package com.koreait.SpringSecurityStudy.config;
 
 
+import com.koreait.SpringSecurityStudy.security.Filter.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -13,6 +17,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
 //    corsConfigurationSource() 설정은 spring security에서
 //    CORS(Cross - Origin Resource Sharing)를 처리하기 위한 설정
@@ -40,7 +48,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults()); //위에서 만든 cors 설정을 security에 적용
+        http.csrf(csrf -> csrf.disable());
+//      CSRF란
+//      사용자가 의도하지 않은 요청을 공격자가 유도해서 서버에 전달하도록 하는 공격
+//      JWT 방식 또는 무상태(Stateless) 인증이기 때문에
+//      세션도 없고, 쿠키도 안 쓰고, 토큰 기반이기 때문에 CSRF 공격 자체가 성립되지 않는다.
 
+//        서버사이드 렌더링 로그인 방식 비활성화
+        http.formLogin(formLogin -> formLogin.disable());
+//        Http 프로토콜 기본 로그인 방식 비활성화
+        http.httpBasic(httpBasic -> httpBasic.disable());
+//        서버 사이드 렌더링 로그아웃 비활성화
+        http.logout(logout -> logout.disable());
+        http.sessionManagement(Session->Session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+//        특정 요청 URL에 대한 권한 설정
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/auth/test").permitAll();
+            auth.anyRequest().authenticated();
+                });
+
+        return http.build();
 
     }
 }
