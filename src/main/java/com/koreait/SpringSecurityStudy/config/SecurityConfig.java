@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -20,6 +21,14 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+//  비밀번호를 안전하게 암호화(해싱)하고, 검증하는 역할
+//  단방향 해시, 복호화 불가능
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
 
 //    corsConfigurationSource() 설정은 spring security에서
@@ -66,7 +75,7 @@ public class SecurityConfig {
 
 //        특정 요청 URL에 대한 권한 설정
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/auth/test").permitAll();
+            auth.requestMatchers("/auth/test","/auth/signup","/auth/signin").permitAll();
             auth.anyRequest().authenticated();
                 });
 
