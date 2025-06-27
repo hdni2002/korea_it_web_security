@@ -11,11 +11,11 @@
     </resultMap>
 
     <resultMap id="UserRoleResultMap" type="com.koreait.SpringSecurityStudy.entity.UserRole">
-        <id property="userRoleid" column="user_role_id" />
+        <id property="userRoleId" column="user_role_id" />
         <result property="userId" column="urt_user_id" />
         <result property="roleId" column="urt_role_id" />
-        <result property="createdt" column="create_dt" />
-        <result property="updatedt" column="update_dt" />
+        <result property="createDt" column="create_dt" />
+        <result property="updateDt" column="update_dt" />
         <association property="role" resultMap="RoleResultMap" />
     </resultMap>
 
@@ -23,6 +23,7 @@
         <id property="userId" column="user_id" />
         <result property="username" column="username" />
         <result property="email" column="email" />
+        <result property="password" column="password" />
         <collection property="userRoles" resultMap="UserRoleResultMap" />
     </resultMap>
 
@@ -55,7 +56,7 @@
             left outer join role_tb rt on (rt.role_id = urt.role_id)
 
         where
-            ut.user_id = 1;
+            ut.user_id = #{userId};
 
     </select>
     <select id="getUserByUsername" resultMap="UserResultMap">
@@ -82,4 +83,22 @@
             ut.username = #{username};
 
     </select>
+
+    <update id="updateEmail">
+        update
+            user_tb
+        set
+            email = #{email}
+        where
+            user_id = #{userId};
+    </update>
+    <update id="updatePassword">
+        update
+            user_tb
+        set
+            password = #{password}
+        where
+            user_id = #{userId};
+
+    </update>
 </mapper>
