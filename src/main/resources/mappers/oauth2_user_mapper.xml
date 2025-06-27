@@ -10,7 +10,7 @@
             oauth2_user_tb
         where
             provider = #{provider} and
-            providerUserId = #{providerUserId};
+            provider_user_Id = #{providerUserId};
 
     </select>
 </mapper>
