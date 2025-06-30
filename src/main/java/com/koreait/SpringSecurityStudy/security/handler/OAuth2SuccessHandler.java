@@ -61,5 +61,4 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.sendRedirect("http://localhost:3000/auth/oauth2/signin?accessToken=" + accessToken);
     }
 }
-23
-23
+
