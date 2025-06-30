@@ -5,7 +5,7 @@ import com.koreait.SpringSecurityStudy.entity.User;
 import com.koreait.SpringSecurityStudy.repository.OAuth2UserRepository;
 import com.koreait.SpringSecurityStudy.repository.UserRepository;
 import com.koreait.SpringSecurityStudy.security.jwt.JwtUtil;
-import jakarta.servlet.FilterChain;git rm
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
