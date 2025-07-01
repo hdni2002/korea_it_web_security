@@ -38,4 +38,8 @@ public class UserRepository {
         return userMapper.updatePassword(userId, password);
     }
 
+    public Optional<User> getUserByEmail(String email){
+        return userMapper.getUserByEmail(email);
+    }
+
 }
